@@ -78,7 +78,9 @@ input{font:inherit;color:inherit}
 
 /* ============ 一体式玻璃 Dock：搜索 + 分类同属一个控件 ============ */
 .topdock,.topdock.lg{position:sticky;top:6px;z-index:44;margin:0 10px;border-radius:22px;overflow:hidden}
-.dockrow{display:flex;align-items:center;gap:8px;padding:9px 10px 3px}
+.dockrow{display:flex;align-items:center;gap:8px;padding:9px 10px 3px;height:46px;overflow:hidden;
+  transition:height .3s var(--ease),opacity .22s var(--ease),padding .3s var(--ease)}
+.topdock.min .dockrow{height:0;padding-top:0;padding-bottom:0;opacity:0;pointer-events:none}
 .searchbox{position:relative;flex:1;min-width:0}
 .searchbox>svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--txt3);pointer-events:none}
 .searchbox input{
@@ -100,6 +102,7 @@ input{font:inherit;color:inherit}
 .sortbtn{flex:none;height:34px;padding:0 9px;border-radius:10px;font-size:13px;color:var(--tint);font-weight:600;
   display:flex;align-items:center;gap:3px;transition:background .2s,transform .15s var(--ease)}
 .sortbtn:active{background:color-mix(in srgb,var(--txt) 8%,transparent);transform:scale(.94)}
+.tabs .sortbtn{margin-left:auto;height:28px;padding:0 11px;border-radius:14px;align-self:center}
 /* 分类：dock 内单行横滑 + 右缘渐隐 */
 .tabs{display:flex;flex-wrap:wrap;gap:4px;padding:5px 8px 8px}
 .tab{flex:none;padding:6px 11px;border-radius:13px;font-size:13px;color:var(--txt2);
@@ -110,8 +113,8 @@ input{font:inherit;color:inherit}
 @media(prefers-color-scheme:dark){.tab.on{background:rgba(255,255,255,.92);color:#000}}
 
 /* ============ 工具入口：玻璃小胶囊（自动换行，全部可见） ============ */
-.tools{display:flex;flex-wrap:wrap;gap:7px;padding:10px 16px 2px}
-.tool{flex:none;height:33px;padding:0 12px;border-radius:17px;display:inline-flex;align-items:center;gap:6px;
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:10px 16px 2px}
+.tool{width:100%;height:33px;padding:0 4px;border-radius:17px;display:inline-flex;align-items:center;justify-content:center;gap:5px;
   font-size:12.5px;font-weight:600;color:var(--txt2);white-space:nowrap;
   background:rgba(255,255,255,.72);
   background:color-mix(in srgb,#fff 55%,transparent);
@@ -401,8 +404,6 @@ input{font:inherit;color:inherit}
 .eleclist{columns:2;column-gap:9px;list-style:none;font-size:13px;color:var(--txt)}
 .eleclist li{padding:7px 0;border-bottom:.5px solid var(--sep);break-inside:avoid;color:var(--txt2)}
 .eleclist li:before{content:"×";color:var(--red);font-weight:700;margin-right:7px}
-.elecnote{font-size:13px;line-height:1.7;background:#ff950014;border-radius:10px;padding:11px 13px;color:var(--txt);margin-bottom:12px}
-.elecnote b{font-weight:700}
 .sch{background:var(--card);border-radius:12px;padding:14px;margin-bottom:11px;box-shadow:0 .5px 0 var(--sep)}
 .schhead{display:flex;gap:11px;align-items:flex-start}
 .schsw{display:flex;gap:0;margin-top:3px;flex:none}
@@ -582,9 +583,8 @@ footer{padding:10px 24px calc(20px + var(--safe-b));font-size:11px;color:var(--t
       <input id="searchInput" type="search" placeholder="搜索商品 / 品牌 / 规格" autocomplete="off" autocapitalize="off">
       <button class="clr" aria-label="清除"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
     </div>
-    <button class="sortbtn" id="sortBtn">排序</button>
   </div>
-  <div class="tabs" id="tabs"><button class="tab on">全部</button><button class="tab" data-c="证件">证件</button><button class="tab" data-c="床品">床品</button><button class="tab" data-c="洗漱">洗漱</button><button class="tab" data-c="衣物">衣物</button><button class="tab" data-c="洗衣">洗衣</button><button class="tab" data-c="电子">电子</button><button class="tab" data-c="学习">学习</button><button class="tab" data-c="收纳">收纳</button><button class="tab" data-c="贴身">贴身</button><button class="tab" data-c="好物">好物</button></div>
+  <div class="tabs" id="tabs"><button class="tab on">全部</button><button class="tab" data-c="证件">证件</button><button class="tab" data-c="床品">床品</button><button class="tab" data-c="洗漱">洗漱</button><button class="tab" data-c="衣物">衣物</button><button class="tab" data-c="洗衣">洗衣</button><button class="tab" data-c="电子">电子</button><button class="tab" data-c="学习">学习</button><button class="tab" data-c="收纳">收纳</button><button class="tab" data-c="贴身">贴身</button><button class="tab" data-c="好物">好物</button><button class="sortbtn" id="sortBtn">排序</button></div>
 </div>
 
 <div class="tools" id="tools"><button class="tool" data-open="top"><span class="n">01</span>必买 10 件</button><button class="tool" data-open="tm"><span class="n">02</span>开学时间线</button><button class="tool" data-open="bud"><span class="n">03</span>预算方案</button><button class="tool" data-open="sch"><span class="n">04</span>床铺搭配</button><button class="tool" data-open="deco"><span class="n">05</span>布置灵感</button><button class="tool" data-open="trap"><span class="n">06</span>避坑清单</button><button class="tool" data-open="elec"><span class="n">07</span>违规电器</button><button class="tool" data-open="run"><span class="n">08</span>逐个采购</button><button class="tool" data-open="cfg"><span class="n">09</span>一键配宿舍</button></div>
@@ -636,8 +636,7 @@ footer{padding:10px 24px calc(20px + var(--safe-b));font-size:11px;color:var(--t
 <div class="ptitle">宿舍违规电器提醒</div>
 <div class="pdesc">以下电器在多所高校宿舍属于<b>明令禁用</b>或<b>限功率</b>范围，使用可能被没收、通报甚至处分。<b>本清单不推荐任何违规电器。</b>多数宿舍用"恶性负载识别"，纯电阻发热类一插就跳闸；部分高校还有定时断电。<b>购买前务必查阅本校《学生宿舍管理规定》或询问辅导员。</b></div>
 <ul class="eleclist"><li>电煮锅 / 小电锅</li><li>电热毯 / 暖床宝</li><li>热得快 / 电热棒</li><li>电吹风（多数限 800W 或 1000W 以下）</li><li>充电式暖手宝 / 电暖宝</li><li>电暖器 / 小太阳</li><li>卷发棒 / 直发夹</li><li>美甲灯</li><li>电熨斗 / 挂烫机</li><li>电饭煲 / 迷你电饭锅</li><li>养生壶 / 电热水壶</li><li>电热饭盒</li><li>小冰箱</li><li>洗衣机</li><li>大功率音响</li><li>明火蚊香 / 蜡烛</li><li>烘鞋器（发热类）</li><li>自建路由器 / 热点（部分校禁止）</li></ul>
-<div class="elecnote"><b>你校限电 600W（上床下桌）：</b>600W 属严格档，几乎必然是"恶性负载识别"，纯电阻发热类一插即跳并被记录——吹风机（含 800W 便携款）、暖手宝、电热毯、卷发棒、直发夹、养生壶、电煮锅全部不要买。桌面只留一个插排 + 电脑 + 充电台灯，照明和小风扇一律选 USB 充电款。需要热水用楼层开水房 + 焖烧杯，别买任何加热容器。</div>
-<div class="elecnote"><b>三条实操建议：</b>① 需要吹风机就选 ≤800W 折叠小功率款，或用浴室公共吹风机；② 怕冷优先加被子与穿睡衣，别买发热类电器，注水热水袋是零风险方案；③ 想办校园卡或买随身 WiFi 之前，先问清校园网是否限 MAC、是否禁止第三方无线设备、断网时间几点。</div></div></div></div>
+</div></div></div>
 
 <div class="toast lg" id="toast" role="status"></div>
 
@@ -702,7 +701,6 @@ var TIM_ORDER = { '当': 0, '前': 1, '到': 2, '后': 3, '需': 4 };
 var SORTS = [['rec', '推荐排序'], ['score', '综合评分 高→低'], ['priceUp', '价格 低→高'], ['priceDown', '价格 高→低'], ['value', '性价比 高→低'], ['use', '使用频率 高→低']];
 var BUDGETS = [500, 800, 1000, 1500, 2000, 3000];
 var PRICE_NOTE = '参考价：会随优惠券、会员、活动、地区浮动，最终以平台结算页为准。';
-var SCORE_NOTE = '评分为编辑推荐分（基于公开商品信息、规格、价格与宿舍适配度），非实验室实测。';
 var stars = function (n) { var k = Math.max(0, Math.min(5, Math.round(n))); return '<span class="stars">' + '★'.repeat(k) + '<s>' + '★'.repeat(5 - k) + '</s></span>'; };
 /* 值得买的顺序：优先级降 → 时点早 → 评分高 → 价格低 */
 var worth = function (a, b) { return (b.pri - a.pri) || (TIM_ORDER[a.tim] - TIM_ORDER[b.tim]) || ((b.overall || 0) - (a.overall || 0)) || (priceOf(a) - priceOf(b)); };
@@ -1059,7 +1057,7 @@ function detailHTML(p) {
       '<div class="dims">' + dimsArr.map(function (k) {
         var v = p.dims[k];
         return '<div class="d">' + k + '<i>' + v.toFixed(1) + '</i><div class="bar"><i data-w="' + (v * 10) + '"></i></div></div>';
-      }).join('') + '</div></div><div class="in" style="padding-top:0"><p class="dim-p" style="font-size:11.5px">' + SCORE_NOTE + '</p></div></div>';
+      }).join('') + '</div></div></div>';
   }
   if (!p.free) {
     var pk = ['京东', '淘宝', '拼多多', '抖音'], cls = { 京东: 'lc-jd', 淘宝: 'lc-tb', 拼多多: 'lc-pdd', 抖音: 'lc-dy' };
@@ -1380,7 +1378,7 @@ function printList() {
   });
   pp.innerHTML = '<h1>大学宿舍采购清单</h1><div class="pp-meta">' + ids.length + ' 件 · 合计约 ¥' + yuan(cartSum()) +
     ' · 平台取各件最低价 · 打印于 ' + new Date().toLocaleDateString('zh-CN') + '</div>' + rows +
-    '<div class="pp-note">' + SCORE_NOTE + ' ' + PRICE_NOTE + ' 部分商品的具体颜色 / 尺寸需在下单前与客服确认。</div>';
+    '<div class="pp-note">' + PRICE_NOTE + ' 部分商品的具体颜色 / 尺寸需在下单前与客服确认。</div>';
   window.print();
 }
 
@@ -1591,9 +1589,10 @@ function bind() {
       bm.textContent = box.classList.contains('open') ? '收起清单 ▲' : '展开完整清单 ▼'; return; }
   });
   // 吸顶导航边缘线（滚动感知）
-  var nav = $('.topdock');
+  var nav = $('.topdock'), si = document.getElementById('searchInput');
   addEventListener('scroll', function () {
     nav.classList.toggle('edge', scrollY > 4);
+    nav.classList.toggle('min', scrollY > 150 && document.activeElement !== si);
   }, { passive: true });
 }
 function gotoCard(i) {
