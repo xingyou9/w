@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme:light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme:dark)">
 <meta name="format-detection" content="telephone=no">
 <title>大学生新生用品采购系统</title>
@@ -11,7 +11,7 @@
 <style>
 /* ============ iOS 原生风格 · 设计令牌 ============ */
 :root{
-  --bg:#f2f2f7; --card:#ffffff; --card2:#ffffff;
+  --bg:#ffffff; --card:#ffffff; --card2:#ffffff;
   --txt:#000000; --txt2:rgba(60,60,67,.6); --txt3:rgba(60,60,67,.36);
   --sep:rgba(60,60,67,.12); --sep2:rgba(60,60,67,.29);
   --tint:#007aff; --tint2:#0a84ff;
@@ -37,14 +37,14 @@
 }}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;
   -webkit-text-size-adjust:100%!important;text-size-adjust:100%!important}
-html{-webkit-text-size-adjust:100%!important;text-size-adjust:100%!important;font-size:15px}
+html{-webkit-text-size-adjust:100%!important;text-size-adjust:100%!important;font-size:15px;overflow-x:clip}
 body{
   font:15px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Helvetica Neue",sans-serif;
   font-size:15px!important;
   background:var(--bg); color:var(--txt);
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   padding-bottom:calc(74px + var(--safe-b));
-  overflow-x:hidden;
+  overflow-x:clip;
 }
 @media(min-width:700px){body{max-width:700px;margin:0 auto}}
 img{max-width:100%;display:block}
@@ -53,20 +53,55 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 input{font:inherit;color:inherit}
 .num{font-variant-numeric:tabular-nums;letter-spacing:-.2px}
 
-/* ============ 顶部背景（浅色 iOS 风格） ============ */
-.hero{position:relative;overflow:hidden;padding:42px 22px 30px;color:var(--txt);
-  background:
-    radial-gradient(110% 80% at 12% -18%, rgba(122,162,255,.16) 0%, transparent 55%),
-    radial-gradient(90% 70% at 92% -8%, rgba(196,168,255,.13) 0%, transparent 52%),
-    radial-gradient(120% 90% at 50% 120%, rgba(150,205,255,.10) 0%, transparent 60%),
-    linear-gradient(180deg,#eaeef6 0%,#f1f2f6 55%,var(--bg) 100%)}
-@media(prefers-color-scheme:dark){.hero{color:var(--txt);
-  background:
-    radial-gradient(110% 80% at 12% -18%, rgba(60,100,200,.16) 0%, transparent 55%),
-    radial-gradient(90% 70% at 92% -8%, rgba(130,90,200,.10) 0%, transparent 52%),
-    linear-gradient(180deg,#15171e 0%,#0e1014 55%,var(--bg) 100%)}}
-.hero h1{position:relative;z-index:2;font-size:30px;font-weight:700;letter-spacing:-.4px;line-height:1.18;white-space:nowrap}
-.hero .sub{position:relative;z-index:2;margin-top:7px;font-size:13px;color:var(--txt2)}
+/* ============ 纯白背景（深色为纯黑） ============ */
+
+/* ============ 顶部：大标题 ============ */
+.hero{padding:34px 18px 14px}
+.hero h1{font-size:30px;font-weight:700;letter-spacing:-.6px;line-height:1.15;white-space:nowrap;color:var(--txt)}
+
+/* ============ 一体式玻璃 Dock：搜索 + 分类同属一个控件 ============ */
+.topdock,.topdock.lg{position:sticky;top:6px;z-index:44;margin:0 10px;border-radius:22px;overflow:hidden}
+.dockrow{display:flex;align-items:center;gap:8px;padding:9px 10px 3px}
+.searchbox{position:relative;flex:1;min-width:0}
+.searchbox svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--txt3)}
+.searchbox input{
+  width:100%;height:34px;border-radius:10px;border:0;
+  background:color-mix(in srgb,var(--txt) 6.5%,transparent);
+  padding:0 28px 0 30px;font-size:14px;outline:none;appearance:none;color:var(--txt);
+  transition:background .25s var(--ease),box-shadow .25s var(--ease)}
+.searchbox input::placeholder{color:var(--txt3)}
+.searchbox input:focus{background:color-mix(in srgb,var(--txt) 10%,transparent);box-shadow:0 0 0 2.5px color-mix(in srgb,var(--tint) 30%,transparent)}
+.searchbox .clr{position:absolute;right:6px;top:50%;transform:translateY(-50%) scale(.6);width:18px;height:18px;border-radius:50%;
+  background:var(--fill);color:var(--txt2);display:flex;align-items:center;justify-content:center;font-size:10px;
+  opacity:0;pointer-events:none;transition:opacity .2s var(--ease),transform .2s var(--spring)}
+.searchbox .clr.show{opacity:1;transform:translateY(-50%) scale(1);pointer-events:auto}
+.sortbtn{flex:none;height:34px;padding:0 9px;border-radius:10px;font-size:13px;color:var(--tint);font-weight:600;
+  display:flex;align-items:center;gap:3px;transition:background .2s,transform .15s var(--ease)}
+.sortbtn:active{background:color-mix(in srgb,var(--txt) 8%,transparent);transform:scale(.94)}
+/* 分类：dock 内单行横滑 + 右缘渐隐 */
+.tabs{display:flex;flex-wrap:nowrap;gap:3px;padding:5px 8px 8px;overflow-x:auto;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+  -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 22px),transparent 100%);
+  mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 22px),transparent 100%)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;padding:6px 13px;border-radius:14px;font-size:13.5px;color:var(--txt2);
+  transition:background .3s var(--spring),color .25s var(--ease),transform .15s var(--ease),box-shadow .3s var(--ease);white-space:nowrap}
+.tab:active{transform:scale(.93)}
+.tab.on{background:color-mix(in srgb,var(--txt) 88%,transparent);color:var(--bg);font-weight:600;border-radius:15px;
+  box-shadow:0 1px 5px rgba(20,30,60,.18)}
+@media(prefers-color-scheme:dark){.tab.on{background:rgba(255,255,255,.92);color:#000}}
+
+/* ============ 工具入口：玻璃小胶囊（自动换行，全部可见） ============ */
+.tools{display:flex;flex-wrap:wrap;gap:7px;padding:10px 16px 2px}
+.tool{flex:none;height:33px;padding:0 12px;border-radius:17px;display:inline-flex;align-items:center;gap:6px;
+  font-size:12.5px;font-weight:600;color:var(--txt2);white-space:nowrap;
+  background:color-mix(in srgb,#fff 55%,transparent);
+  -webkit-backdrop-filter:blur(16px) saturate(1.7);backdrop-filter:blur(16px) saturate(1.7);
+  box-shadow:inset 0 1px 0 var(--lg-edge),inset 0 0 0 .5px var(--lg-rim),0 0 0 .5px rgba(60,60,67,.08),0 1px 5px rgba(20,30,60,.08);
+  transition:transform .15s var(--ease)}
+@media(prefers-color-scheme:dark){.tool{background:color-mix(in srgb,#3a3d46 55%,transparent)}}
+.tool:active{transform:scale(.93)}
+.tool .n{font-size:10px;font-weight:800;color:var(--tint);font-variant-numeric:tabular-nums}
 
 /* ============ 液态玻璃配方 v2（iOS 26/27 质感：更透·更润·微颗粒） ============ */
 :root{
@@ -84,104 +119,22 @@ input{font:inherit;color:inherit}
   --lg-blur:blur(30px) saturate(1.85) brightness(1.16) contrast(1.05);
   --lg-spec:linear-gradient(112deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,.05) 20%,transparent 42%,rgba(255,255,255,.03) 74%,rgba(255,255,255,.09) 100%);
 }}
-/* ============ 大标题区（已并入 hero） ============ */
-.pagetitle{padding:0}
-.pagetitle .sub{margin-top:7px;font-size:13px;color:var(--txt2);line-height:1.5}
-.pagetitle .stat{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}
-.pagetitle .stat span{font-size:11px;color:var(--txt2);background:var(--fill2);border-radius:5px;padding:3px 8px;font-variant-numeric:tabular-nums}
-.pagetitle .stat b{color:var(--txt);font-weight:600}
-
-/* ============ iOS 风格壁纸底 ============ */
-body{background:
-  radial-gradient(100% 70% at 16% -4%, rgba(118,152,255,.15), transparent 55%),
-  radial-gradient(80% 55% at 90% 2%, rgba(216,180,255,.13), transparent 52%),
-  radial-gradient(90% 65% at 50% 106%, rgba(150,214,255,.11), transparent 60%),
-  linear-gradient(180deg,#edf0f8 0%,var(--bg) 26%);
-  background-attachment:fixed}
-@media(prefers-color-scheme:dark){body{background:
-  radial-gradient(100% 70% at 16% -4%, rgba(58,92,190,.2), transparent 55%),
-  radial-gradient(80% 55% at 90% 2%, rgba(120,80,190,.12), transparent 52%),
-  linear-gradient(180deg,#0f1218 0%,var(--bg) 26%);
-  background-attachment:fixed}}
-/* 玻璃基元：高透 + 边缘折射 + 斜向镜面高光 + 微颗粒 */
+/* ============ 玻璃基元 ============ */
 .lg{position:relative;
   background:var(--lg-grain),linear-gradient(168deg,var(--lg-fill-a) 0%,var(--lg-fill-b) 52%,var(--lg-fill-c) 100%);
   -webkit-backdrop-filter:var(--lg-blur);backdrop-filter:var(--lg-blur);
   box-shadow:inset 0 1px 0 var(--lg-edge),inset 0 -1px 0 var(--lg-rim2),inset 0 0 0 .5px var(--lg-rim),
+    0 0 0 .5px rgba(60,60,67,.07),
     inset 0 -9px 16px -12px rgba(20,30,60,.16),var(--lg-sh);
 }
 .lg:after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:var(--lg-spec)}
-.navbar{
-  position:sticky;top:6px;z-index:44;
-  margin:0 10px;border-radius:24px;
-}
-/* 吸顶分类：单行紧凑，横滑 + 右缘渐隐提示 */
-.tabs{display:flex;flex-wrap:nowrap;gap:2px;padding:5px 10px;overflow-x:auto;scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
-  -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);
-  mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%)}
-.tabs::-webkit-scrollbar{display:none}.tab{flex:none;padding:7px 14px;border-radius:16px;font-size:14px;color:var(--txt2);
-  transition:background .3s var(--spring),color .25s var(--ease),transform .15s var(--ease),box-shadow .3s var(--ease);white-space:nowrap}
-.tab:active{transform:scale(.93)}
-.tab.on{background:linear-gradient(168deg,rgba(255,255,255,.78),rgba(255,255,255,.46));color:var(--txt);font-weight:600;
-  -webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 0 0 .5px rgba(255,255,255,.4),0 2px 8px rgba(20,30,60,.12)}
-@media(prefers-color-scheme:dark){.tab.on{background:linear-gradient(168deg,rgba(140,145,160,.42),rgba(90,94,108,.32));color:#fff;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 0 0 0 .5px rgba(255,255,255,.1),0 2px 8px rgba(0,0,0,.4)}}
-
-/* ============ 搜索 + 筛选 ============ */
-.searchwrap{padding:6px 16px 2px;position:relative;display:flex;align-items:center;gap:8px}
-.searchbox{position:relative;flex:1;min-width:0}
-.searchbox svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--txt3)}
-.searchbox input{
-  width:100%;height:38px;border-radius:13px;border:0;
-  background:linear-gradient(168deg,var(--lg-fill-a) 0%,var(--lg-fill-b) 52%,var(--lg-fill-c) 100%);
-  -webkit-backdrop-filter:var(--lg-blur);backdrop-filter:var(--lg-blur);
-  box-shadow:inset 0 1px 0 var(--lg-edge),inset 0 -1px 0 var(--lg-rim2),inset 0 0 0 .5px var(--lg-rim),var(--lg-sh);
-  padding:0 30px 0 32px;font-size:15px;outline:none;appearance:none;color:var(--txt);
-  transition:background .25s var(--ease),box-shadow .25s var(--ease);
-}
-.searchbox input::placeholder{color:var(--txt3)}
-.searchbox input:focus{background:rgba(255,255,255,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 0 0 3px color-mix(in srgb,var(--tint) 30%, transparent)}
-.searchbox .clr{position:absolute;right:6px;top:50%;transform:translateY(-50%) scale(.6);width:19px;height:19px;border-radius:50%;
-  background:var(--fill);color:var(--txt2);display:flex;align-items:center;justify-content:center;font-size:10px;
-  opacity:0;pointer-events:none;transition:opacity .2s var(--ease),transform .2s var(--spring)}
-.searchbox .clr.show{opacity:1;transform:translateY(-50%) scale(1);pointer-events:auto}
-.sortbtn{flex:none;height:38px;padding:0 13px;border-radius:13px;position:relative;color:var(--tint);font-weight:600;
-  display:flex;align-items:center;gap:4px;transition:transform .15s var(--ease)}
-.sortbtn:active{transform:scale(.93)}
-.sortbtn{font-size:13px}
-.chips{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:9px 16px 3px}
-.chips::-webkit-scrollbar{display:none}
-.chip{flex:none;height:29px;padding:0 13px;border-radius:15px;
-  background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,.4));
-  -webkit-backdrop-filter:saturate(1.8) blur(18px);backdrop-filter:saturate(1.8) blur(18px);
-  box-shadow:inset 0 .5px 0 rgba(255,255,255,.75),inset 0 0 0 .5px rgba(255,255,255,.22),0 1px 4px rgba(60,70,90,.06);
-  color:var(--txt2);font-size:13px;display:inline-flex;align-items:center;gap:4px;
-  transition:background .25s var(--spring),color .25s var(--ease),transform .15s var(--ease),box-shadow .25s var(--ease)}
-@media(prefers-color-scheme:dark){.chip{background:linear-gradient(180deg,rgba(66,68,76,.5),rgba(42,44,50,.45));
-  box-shadow:inset 0 .5px 0 rgba(255,255,255,.14),inset 0 0 0 .5px rgba(255,255,255,.06)}}
-.chip:active{transform:scale(.93)}
-.chip.on{background:color-mix(in srgb,var(--tint) 82%, transparent);color:#fff;font-weight:600;
-  -webkit-backdrop-filter:saturate(1.6) blur(14px);backdrop-filter:saturate(1.6) blur(14px);
-  box-shadow:inset 0 .5px 0 rgba(255,255,255,.45),inset 0 0 0 .5px rgba(255,255,255,.18),0 2px 8px color-mix(in srgb,var(--tint) 35%, transparent)}
-
-/* ============ 工具入口 ============ */
-.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:9px;padding:10px 16px 4px}
-.tool{min-width:0;display:flex;align-items:center;gap:9px;border-radius:15px;
-  padding:11px 13px;transition:transform .18s var(--ease)}
-.tool:active{transform:scale(.94)}
-.tool .n{width:28px;height:28px;border-radius:9px;background:color-mix(in srgb,var(--txt) 7%,transparent);color:var(--txt2);font-size:12px;font-weight:700;flex:none;
-  display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
-.tool b{display:block;font-size:14px;font-weight:600;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tool i{display:block;font-style:normal;font-size:11px;color:var(--txt2);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ============ 列表分组 ============ */
 .section{margin:2px 0 26px}
 .sec-head{display:flex;align-items:baseline;gap:8px;padding:16px 18px 7px}
 .sec-head h2{font-size:22px;font-weight:700;letter-spacing:-.4px}
 .sec-head .cnt{font-size:12px;color:var(--txt3);font-variant-numeric:tabular-nums}
-.group{margin:0 16px;background:var(--card);border-radius:var(--r-card);overflow:hidden;box-shadow:0 .5px 0 var(--sep)}
+.group{margin:0 16px;background:var(--card);border-radius:var(--r-card);overflow:hidden;box-shadow:inset 0 0 0 .5px var(--sep),0 .5px 0 var(--sep)}
 @media(prefers-color-scheme:dark){.group{box-shadow:none;border:.5px solid var(--sep2)}}
 
 /* 商品行 */
@@ -455,24 +408,22 @@ footer{padding:10px 24px calc(20px + var(--safe-b));font-size:11px;color:var(--t
   <h1>大学新生采购清单</h1>
 </div>
 
-<div class="navbar lg">
+<div class="topdock lg">
+  <div class="dockrow">
+    <div class="searchbox">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="7"/><path d="M16 16l5 5"/></svg>
+      <input id="searchInput" type="search" placeholder="搜索商品 / 品牌 / 型号 / 关键词" autocomplete="off" autocapitalize="off">
+      <button class="clr" aria-label="清除"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+    </div>
+    <button class="sortbtn" id="sortBtn">排序</button>
+  </div>
   <div class="tabs" id="tabs"><button class="tab on">全部</button><button class="tab" data-c="证件">证件材料</button><button class="tab" data-c="床品">床上用品</button><button class="tab" data-c="洗漱">洗漱卫浴</button><button class="tab" data-c="衣物">衣物护理</button><button class="tab" data-c="洗衣">洗衣清洁</button><button class="tab" data-c="电子">电子数码</button><button class="tab" data-c="学习">学习用品</button><button class="tab" data-c="收纳">收纳生活</button><button class="tab" data-c="贴身">贴身衣物</button><button class="tab" data-c="好物">好物推荐</button></div>
 </div>
 
-<div class="searchwrap">
-  <div class="searchbox">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="7"/><path d="M16 16l5 5"/></svg>
-    <input id="searchInput" type="search" placeholder="搜索商品 / 品牌 / 型号 / 关键词" autocomplete="off" autocapitalize="off">
-    <button class="clr" aria-label="清除"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-  </div>
-  <button class="sortbtn lg" id="sortBtn">排序</button>
-</div>
-
-<div class="tools" id="tools"><button class="tool lg" data-open="top"><span class="n">01</span><span style="min-width:0"><b>必买 10 件</b><i>先按这个顺序买</i></span></button><button class="tool lg" data-open="tm"><span class="n">02</span><span style="min-width:0"><b>开学时间线</b><i>别一次性买完</i></span></button><button class="tool lg" data-open="bud"><span class="n">03</span><span style="min-width:0"><b>预算方案</b><i>500～3000 六档</i></span></button><button class="tool lg" data-open="sch"><span class="n">04</span><span style="min-width:0"><b>床铺搭配</b><i>5 套配色方案</i></span></button><button class="tool lg" data-open="deco"><span class="n">05</span><span style="min-width:0"><b>布置灵感</b><i>宿舍四区摆法</i></span></button><button class="tool lg" data-open="trap"><span class="n">06</span><span style="min-width:0"><b>避坑清单</b><i>常见闲置物品</i></span></button><button class="tool lg" data-open="elec"><span class="n">07</span><span style="min-width:0"><b>违规电器</b><i>买前必查校规</i></span></button></div>
+<div class="tools" id="tools"><button class="tool" data-open="top"><span class="n">01</span>必买 10 件</button><button class="tool" data-open="tm"><span class="n">02</span>开学时间线</button><button class="tool" data-open="bud"><span class="n">03</span>预算方案</button><button class="tool" data-open="sch"><span class="n">04</span>床铺搭配</button><button class="tool" data-open="deco"><span class="n">05</span>布置灵感</button><button class="tool" data-open="trap"><span class="n">06</span>避坑清单</button><button class="tool" data-open="elec"><span class="n">07</span>违规电器</button></div>
 
 <main id="list"></main>
 <div class="empty" id="empty">没有符合条件的商品<br><span style="font-size:12px">换个关键词或清除筛选试试</span></div>
-
 
 <div class="cartbar lg" id="cartbar">
   <div class="cb-ico"><svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6.5 9.5h15l-1.3 14H7.8l-1.3-14z"/><path d="M10.6 12V7.6a3.4 3.4 0 0 1 6.8 0V12"/></svg><span class="cb-n" id="cbN">0</span></div>
@@ -500,7 +451,7 @@ footer{padding:10px 24px calc(20px + var(--safe-b));font-size:11px;color:var(--t
 <div class="tli"><b><i style="background:#2a5d8a"></i>到校后买（看过宿舍再说）</b><p>脸盆、洗衣盆、脏衣篮、鞋架、收纳箱、垃圾桶、马桶刷、地垫、文件夹、订书机、柜锁、保温壶。<b>原因：</b>宿舍格局、床下高度、柜子尺寸只有到了才知道，提前买极易买错尺寸。</p></div>
 <div class="tli"><b><i style="background:#6a4a86"></i>住一阵再决定</b><p>床上桌、电脑支架、手机支架、理线器、粘毛器、鞋刷、裤架、床头置物架、健身护具、吹风机。<b>原因：</b>这些是“感觉需要但实际可能闲置”的东西，住满一周你就知道自己到底用不用得上。</p></div>
 <div class="tli"><b><i style="background:#8b9298"></i>完全可以不买</b><p>冰丝凉席（有空调就用不上）、床边靠垫（上下铺基本不用）、衣物香氛喷雾、泳裤（不下水就不买）。按需选择。</p></div></div></div></div></div>
-<div class="sheet" id="sheet-bud" style="display:none"><div class="grab"></div><div class="shbar"><b>预算方案</b><button class="xbtn" aria-label="关闭"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div><div class="body"><div class="ptitle">预算方案<small>点「展开完整清单」看明细，点「加入购物车」一键勾选</small></div><div class="pdesc">按「优先级 → 时间 → 价格」自动装填，每一档都优先保证最必要、最便宜的东西先到位。日常易耗品（纸巾/洗洁精/防晒/花露水等）约 ¥100，无论选哪档都建议单独预留。「建议入手 ≤¥x」的意思是：低于该价即可放心下单，不必等大促。</div><div class="bud"><div class="budhead"><div><b>预算 ¥500</b><span>共 9 件 · 合计约 ¥496</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li></ul><div class="budtip">只够床铺和基础口腔清洁，洗发水/沐浴露/毛巾建议再留约 ¥120。</div></div><div class="bud"><div class="budhead"><div><b>预算 ¥800</b><span>共 21 件 · 合计约 ¥796</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36,34,31,32,65,49,59,20,0,3,79,78,4]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li><li><span>毛巾 ×2</span><em>¥29</em></li><li><span>沐浴露</span><em>¥29</em></li><li><span>洗发水</span><em>¥38</em></li><li><span>插排 ×2</span><em>¥45</em></li><li><span>衣架 ×20</span><em>¥24</em></li><li><span>洗衣液</span><em>¥39</em></li><li><span>床边多层挂篮</span><em>¥14</em></li><li><span>证件收纳包 多层分格</span><em>¥19</em></li><li><span>一寸证件照 8张 + 电子版</span><em>¥9</em></li><li><span>中性笔 + 笔芯</span><em>¥22</em></li><li><span>笔记本 ×3</span><em>¥25</em></li><li><span>二寸证件照 8张</span><em>¥7</em></li></ul><div class="budtip">覆盖睡、洗、用、收纳四条线，是最低体面线。</div></div><div class="bud"><div class="budhead"><div><b>预算 ¥1000</b><span>共 26 件 · 合计约 ¥970</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36,34,31,32,65,49,59,20,67,0,3,79,88,51,39,78,35,46]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li><li><span>毛巾 ×2</span><em>¥29</em></li><li><span>沐浴露</span><em>¥29</em></li><li><span>洗发水</span><em>¥38</em></li><li><span>插排 ×2</span><em>¥45</em></li><li><span>衣架 ×20</span><em>¥24</em></li><li><span>洗衣液</span><em>¥39</em></li><li><span>床边多层挂篮</span><em>¥14</em></li><li><span>夹子式护眼台灯</span><em>¥89</em></li><li><span>证件收纳包 多层分格</span><em>¥19</em></li><li><span>一寸证件照 8张 + 电子版</span><em>¥9</em></li><li><span>中性笔 + 笔芯</span><em>¥22</em></li><li><span>粘钩 ×10</span><em>¥11</em></li><li><span>晾衣夹 ×20</span><em>¥11</em></li><li><span>香皂 + 皂盒</span><em>¥15</em></li><li><span>笔记本 ×3</span><em>¥25</em></li><li><span>一次性洗脸巾</span><em>¥26</em></li><li><span>指甲刀套装</span><em>¥29</em></li></ul><div class="budtip">多数新生的实际选择，一次配齐不会尴尬。</div></div><div class="bud"><div class="budhead"><div><b>预算 ¥1500</b><span>共 44 件 · 合计约 ¥1463</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36,34,31,32,65,49,59,20,67,0,3,79,88,51,38,24,39,63,87,14,70,89,68,42,37,60,78,35,46,30,33,66,17,4,61,74]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li><li><span>毛巾 ×2</span><em>¥29</em></li><li><span>沐浴露</span><em>¥29</em></li><li><span>洗发水</span><em>¥38</em></li><li><span>插排 ×2</span><em>¥45</em></li><li><span>衣架 ×20</span><em>¥24</em></li><li><span>洗衣液</span><em>¥39</em></li><li><span>床边多层挂篮</span><em>¥14</em></li><li><span>夹子式护眼台灯</span><em>¥89</em></li><li><span>证件收纳包 多层分格</span><em>¥19</em></li><li><span>一寸证件照 8张 + 电子版</span><em>¥9</em></li><li><span>中性笔 + 笔芯</span><em>¥22</em></li><li><span>粘钩 ×10</span><em>¥11</em></li><li><span>晾衣夹 ×20</span><em>¥11</em></li><li><span>漱口杯</span><em>¥12</em></li><li><span>隔潮垫</span><em>¥12</em></li><li><span>香皂 + 皂盒</span><em>¥15</em></li><li><span>除湿袋 ×10</span><em>¥15</em></li><li><span>柜锁 ×2</span><em>¥15</em></li><li><span>枕套（备用一对）</span><em>¥17</em></li><li><span>多合一数据线</span><em>¥17</em></li><li><span>垃圾桶 + 垃圾袋</span><em>¥17</em></li><li><span>磁吸充电小夜灯</span><em>¥18</em></li><li><span>马桶刷 + 洁厕灵</span><em>¥18</em></li><li><span>折叠脸盆 ×2</span><em>¥22</em></li><li><span>衣物消毒液</span><em>¥22</em></li><li><span>笔记本 ×3</span><em>¥25</em></li><li><span>一次性洗脸巾</span><em>¥26</em></li><li><span>指甲刀套装</span><em>¥29</em></li><li><span>洗面奶（控油）</span><em>¥32</em></li><li><span>浴巾 ×2</span><em>¥55</em></li><li><span>多口USB充电器</span><em>¥89</em></li><li><span>秋冬被</span><em>¥89</em></li><li><span>二寸证件照 8张</span><em>¥7</em></li><li><span>洗衣袋</span><em>¥11</em></li><li><span>U盘</span><em>¥25</em></li></ul><div class="budtip">补齐台灯、充电器、浴巾、秋冬被，一学期基本不用再添大件。</div></div><div class="bud"><div class="budhead"><div><b>预算 ¥2000</b><span>共 50 件 · 合计约 ¥1968</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36,34,31,32,65,49,59,20,67,0,3,79,88,51,38,24,39,63,87,14,70,89,68,42,37,60,78,35,46,30,33,66,69,84,17,4,80,74,45,90,27,92]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li><li><span>毛巾 ×2</span><em>¥29</em></li><li><span>沐浴露</span><em>¥29</em></li><li><span>洗发水</span><em>¥38</em></li><li><span>插排 ×2</span><em>¥45</em></li><li><span>衣架 ×20</span><em>¥24</em></li><li><span>洗衣液</span><em>¥39</em></li><li><span>床边多层挂篮</span><em>¥14</em></li><li><span>夹子式护眼台灯</span><em>¥89</em></li><li><span>证件收纳包 多层分格</span><em>¥19</em></li><li><span>一寸证件照 8张 + 电子版</span><em>¥9</em></li><li><span>中性笔 + 笔芯</span><em>¥22</em></li><li><span>粘钩 ×10</span><em>¥11</em></li><li><span>晾衣夹 ×20</span><em>¥11</em></li><li><span>漱口杯</span><em>¥12</em></li><li><span>隔潮垫</span><em>¥12</em></li><li><span>香皂 + 皂盒</span><em>¥15</em></li><li><span>除湿袋 ×10</span><em>¥15</em></li><li><span>柜锁 ×2</span><em>¥15</em></li><li><span>枕套（备用一对）</span><em>¥17</em></li><li><span>多合一数据线</span><em>¥17</em></li><li><span>垃圾桶 + 垃圾袋</span><em>¥17</em></li><li><span>磁吸充电小夜灯</span><em>¥18</em></li><li><span>马桶刷 + 洁厕灵</span><em>¥18</em></li><li><span>折叠脸盆 ×2</span><em>¥22</em></li><li><span>衣物消毒液</span><em>¥22</em></li><li><span>笔记本 ×3</span><em>¥25</em></li><li><span>一次性洗脸巾</span><em>¥26</em></li><li><span>指甲刀套装</span><em>¥29</em></li><li><span>洗面奶（控油）</span><em>¥32</em></li><li><span>浴巾 ×2</span><em>¥55</em></li><li><span>多口USB充电器</span><em>¥89</em></li><li><span>充电宝</span><em>¥59</em></li><li><span>双肩包</span><em>¥89</em></li><li><span>秋冬被</span><em>¥89</em></li><li><span>二寸证件照 8张</span><em>¥7</em></li><li><span>文件夹 / 资料袋</span><em>¥22</em></li><li><span>U盘</span><em>¥25</em></li><li><span>剃须刀（手动）</span><em>¥39</em></li><li><span>雨伞</span><em>¥59</em></li><li><span>电动牙刷</span><em>¥119</em></li><li><span>睡衣 ×2套</span><em>¥129</em></li></ul><div class="budtip">开始包含电动牙刷、手动剃须刀、双肩包、充电宝等提升体验的项。</div></div><div class="bud"><div class="budhead"><div><b>预算 ¥3000</b><span>共 78 件 · 合计约 ¥2969</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36,34,31,32,65,49,59,20,67,0,3,79,88,51,38,24,39,63,87,14,70,89,68,42,37,60,78,35,46,30,33,66,69,84,17,4,61,57,40,21,80,53,62,74,81,41,52,56,72,45,58,90,43,86,27,92,44,82,55,23,54,77,50,73,47,83,75,76,48,85]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li><li><span>毛巾 ×2</span><em>¥29</em></li><li><span>沐浴露</span><em>¥29</em></li><li><span>洗发水</span><em>¥38</em></li><li><span>插排 ×2</span><em>¥45</em></li><li><span>衣架 ×20</span><em>¥24</em></li><li><span>洗衣液</span><em>¥39</em></li><li><span>床边多层挂篮</span><em>¥14</em></li><li><span>夹子式护眼台灯</span><em>¥89</em></li><li><span>证件收纳包 多层分格</span><em>¥19</em></li><li><span>一寸证件照 8张 + 电子版</span><em>¥9</em></li><li><span>中性笔 + 笔芯</span><em>¥22</em></li><li><span>粘钩 ×10</span><em>¥11</em></li><li><span>晾衣夹 ×20</span><em>¥11</em></li><li><span>漱口杯</span><em>¥12</em></li><li><span>隔潮垫</span><em>¥12</em></li><li><span>香皂 + 皂盒</span><em>¥15</em></li><li><span>除湿袋 ×10</span><em>¥15</em></li><li><span>柜锁 ×2</span><em>¥15</em></li><li><span>枕套（备用一对）</span><em>¥17</em></li><li><span>多合一数据线</span><em>¥17</em></li><li><span>垃圾桶 + 垃圾袋</span><em>¥17</em></li><li><span>磁吸充电小夜灯</span><em>¥18</em></li><li><span>马桶刷 + 洁厕灵</span><em>¥18</em></li><li><span>折叠脸盆 ×2</span><em>¥22</em></li><li><span>衣物消毒液</span><em>¥22</em></li><li><span>笔记本 ×3</span><em>¥25</em></li><li><span>一次性洗脸巾</span><em>¥26</em></li><li><span>指甲刀套装</span><em>¥29</em></li><li><span>洗面奶（控油）</span><em>¥32</em></li><li><span>浴巾 ×2</span><em>¥55</em></li><li><span>多口USB充电器</span><em>¥89</em></li><li><span>充电宝</span><em>¥59</em></li><li><span>双肩包</span><em>¥89</em></li><li><span>秋冬被</span><em>¥89</em></li><li><span>二寸证件照 8张</span><em>¥7</em></li><li><span>洗衣袋</span><em>¥11</em></li><li><span>真空压缩袋 ×5</span><em>¥17</em></li><li><span>浴室收纳篮</span><em>¥17</em></li><li><span>床头置物架</span><em>¥19</em></li><li><span>文件夹 / 资料袋</span><em>¥22</em></li><li><span>脏衣篮</span><em>¥22</em></li><li><span>折叠洗衣盆</span><em>¥22</em></li><li><span>U盘</span><em>¥25</em></li><li><span>订书机</span><em>¥25</em></li><li><span>浴室防滑地垫</span><em>¥25</em></li><li><span>晾衣杆</span><em>¥25</em></li><li><span>鞋架</span><em>¥25</em></li><li><span>电脑支架</span><em>¥35</em></li><li><span>剃须刀（手动）</span><em>¥39</em></li><li><span>床下收纳箱</span><em>¥52</em></li><li><span>雨伞</span><em>¥59</em></li><li><span>吹风机</span><em>¥85</em></li><li><span>保温杯</span><em>¥109</em></li><li><span>电动牙刷</span><em>¥119</em></li><li><span>睡衣 ×2套</span><em>¥129</em></li><li><span>剃须刀（电动）</span><em>¥139</em></li><li><span>便利贴 + 标签纸</span><em>¥9</em></li><li><span>鞋刷</span><em>¥9</em></li><li><span>枕巾 2条</span><em>¥10</em></li><li><span>粘毛器</span><em>¥11</em></li><li><span>桌面理线器</span><em>¥11</em></li><li><span>裤架</span><em>¥17</em></li><li><span>手机支架</span><em>¥17</em></li><li><span>鼻毛剪（圆头）</span><em>¥18</em></li><li><span>尺规套装（工科）</span><em>¥25</em></li><li><span>USB小风扇</span><em>¥29</em></li><li><span>震动闹钟</span><em>¥29</em></li><li><span>皮带</span><em>¥59</em></li><li><span>保温壶</span><em>¥129</em></li></ul><div class="budtip">接近全清单，覆盖个护、收纳与品质小电，但不必一次买完。</div></div></div></div>
+<div class="sheet" id="sheet-bud" style="display:none"><div class="grab"></div><div class="shbar"><b>预算方案</b><button class="xbtn" aria-label="关闭"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div><div class="body"><div class="ptitle">预算方案<small>点「展开完整清单」看明细，点「加入购物车」一键勾选</small></div><div class="pdesc">按「优先级 → 时间 → 价格」自动装填。「建议入手 ≤¥x」的意思是：低于该价即可放心下单，不必等大促。日常易耗品（纸巾/洗洁精/防晒等）约 ¥100 请另行预留。</div><div class="bud"><div class="budhead"><div><b>预算 ¥500</b><span>共 9 件 · 合计约 ¥496</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li></ul><div class="budtip">只够床铺和基础口腔清洁，洗发水/沐浴露/毛巾建议再留约 ¥120。</div></div><div class="bud"><div class="budhead"><div><b>预算 ¥800</b><span>共 21 件 · 合计约 ¥796</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36,34,31,32,65,49,59,20,0,3,79,78,4]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li><li><span>毛巾 ×2</span><em>¥29</em></li><li><span>沐浴露</span><em>¥29</em></li><li><span>洗发水</span><em>¥38</em></li><li><span>插排 ×2</span><em>¥45</em></li><li><span>衣架 ×20</span><em>¥24</em></li><li><span>洗衣液</span><em>¥39</em></li><li><span>床边多层挂篮</span><em>¥14</em></li><li><span>证件收纳包 多层分格</span><em>¥19</em></li><li><span>一寸证件照 8张 + 电子版</span><em>¥9</em></li><li><span>中性笔 + 笔芯</span><em>¥22</em></li><li><span>笔记本 ×3</span><em>¥25</em></li><li><span>二寸证件照 8张</span><em>¥7</em></li></ul><div class="budtip">覆盖睡、洗、用、收纳四条线，是最低体面线。</div></div><div class="bud"><div class="budhead"><div><b>预算 ¥1000</b><span>共 26 件 · 合计约 ¥970</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36,34,31,32,65,49,59,20,67,0,3,79,88,51,39,78,35,46]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li><li><span>毛巾 ×2</span><em>¥29</em></li><li><span>沐浴露</span><em>¥29</em></li><li><span>洗发水</span><em>¥38</em></li><li><span>插排 ×2</span><em>¥45</em></li><li><span>衣架 ×20</span><em>¥24</em></li><li><span>洗衣液</span><em>¥39</em></li><li><span>床边多层挂篮</span><em>¥14</em></li><li><span>夹子式护眼台灯</span><em>¥89</em></li><li><span>证件收纳包 多层分格</span><em>¥19</em></li><li><span>一寸证件照 8张 + 电子版</span><em>¥9</em></li><li><span>中性笔 + 笔芯</span><em>¥22</em></li><li><span>粘钩 ×10</span><em>¥11</em></li><li><span>晾衣夹 ×20</span><em>¥11</em></li><li><span>香皂 + 皂盒</span><em>¥15</em></li><li><span>笔记本 ×3</span><em>¥25</em></li><li><span>一次性洗脸巾</span><em>¥26</em></li><li><span>指甲刀套装</span><em>¥29</em></li></ul><div class="budtip">多数新生的实际选择，一次配齐不会尴尬。</div></div><div class="bud"><div class="budhead"><div><b>预算 ¥1500</b><span>共 44 件 · 合计约 ¥1463</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36,34,31,32,65,49,59,20,67,0,3,79,88,51,38,24,39,63,87,14,70,89,68,42,37,60,78,35,46,30,33,66,17,4,61,74]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li><li><span>毛巾 ×2</span><em>¥29</em></li><li><span>沐浴露</span><em>¥29</em></li><li><span>洗发水</span><em>¥38</em></li><li><span>插排 ×2</span><em>¥45</em></li><li><span>衣架 ×20</span><em>¥24</em></li><li><span>洗衣液</span><em>¥39</em></li><li><span>床边多层挂篮</span><em>¥14</em></li><li><span>夹子式护眼台灯</span><em>¥89</em></li><li><span>证件收纳包 多层分格</span><em>¥19</em></li><li><span>一寸证件照 8张 + 电子版</span><em>¥9</em></li><li><span>中性笔 + 笔芯</span><em>¥22</em></li><li><span>粘钩 ×10</span><em>¥11</em></li><li><span>晾衣夹 ×20</span><em>¥11</em></li><li><span>漱口杯</span><em>¥12</em></li><li><span>隔潮垫</span><em>¥12</em></li><li><span>香皂 + 皂盒</span><em>¥15</em></li><li><span>除湿袋 ×10</span><em>¥15</em></li><li><span>柜锁 ×2</span><em>¥15</em></li><li><span>枕套（备用一对）</span><em>¥17</em></li><li><span>多合一数据线</span><em>¥17</em></li><li><span>垃圾桶 + 垃圾袋</span><em>¥17</em></li><li><span>磁吸充电小夜灯</span><em>¥18</em></li><li><span>马桶刷 + 洁厕灵</span><em>¥18</em></li><li><span>折叠脸盆 ×2</span><em>¥22</em></li><li><span>衣物消毒液</span><em>¥22</em></li><li><span>笔记本 ×3</span><em>¥25</em></li><li><span>一次性洗脸巾</span><em>¥26</em></li><li><span>指甲刀套装</span><em>¥29</em></li><li><span>洗面奶（控油）</span><em>¥32</em></li><li><span>浴巾 ×2</span><em>¥55</em></li><li><span>多口USB充电器</span><em>¥89</em></li><li><span>秋冬被</span><em>¥89</em></li><li><span>二寸证件照 8张</span><em>¥7</em></li><li><span>洗衣袋</span><em>¥11</em></li><li><span>U盘</span><em>¥25</em></li></ul><div class="budtip">补齐台灯、充电器、浴巾、秋冬被，一学期基本不用再添大件。</div></div><div class="bud"><div class="budhead"><div><b>预算 ¥2000</b><span>共 50 件 · 合计约 ¥1968</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36,34,31,32,65,49,59,20,67,0,3,79,88,51,38,24,39,63,87,14,70,89,68,42,37,60,78,35,46,30,33,66,69,84,17,4,80,74,45,90,27,92]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li><li><span>毛巾 ×2</span><em>¥29</em></li><li><span>沐浴露</span><em>¥29</em></li><li><span>洗发水</span><em>¥38</em></li><li><span>插排 ×2</span><em>¥45</em></li><li><span>衣架 ×20</span><em>¥24</em></li><li><span>洗衣液</span><em>¥39</em></li><li><span>床边多层挂篮</span><em>¥14</em></li><li><span>夹子式护眼台灯</span><em>¥89</em></li><li><span>证件收纳包 多层分格</span><em>¥19</em></li><li><span>一寸证件照 8张 + 电子版</span><em>¥9</em></li><li><span>中性笔 + 笔芯</span><em>¥22</em></li><li><span>粘钩 ×10</span><em>¥11</em></li><li><span>晾衣夹 ×20</span><em>¥11</em></li><li><span>漱口杯</span><em>¥12</em></li><li><span>隔潮垫</span><em>¥12</em></li><li><span>香皂 + 皂盒</span><em>¥15</em></li><li><span>除湿袋 ×10</span><em>¥15</em></li><li><span>柜锁 ×2</span><em>¥15</em></li><li><span>枕套（备用一对）</span><em>¥17</em></li><li><span>多合一数据线</span><em>¥17</em></li><li><span>垃圾桶 + 垃圾袋</span><em>¥17</em></li><li><span>磁吸充电小夜灯</span><em>¥18</em></li><li><span>马桶刷 + 洁厕灵</span><em>¥18</em></li><li><span>折叠脸盆 ×2</span><em>¥22</em></li><li><span>衣物消毒液</span><em>¥22</em></li><li><span>笔记本 ×3</span><em>¥25</em></li><li><span>一次性洗脸巾</span><em>¥26</em></li><li><span>指甲刀套装</span><em>¥29</em></li><li><span>洗面奶（控油）</span><em>¥32</em></li><li><span>浴巾 ×2</span><em>¥55</em></li><li><span>多口USB充电器</span><em>¥89</em></li><li><span>充电宝</span><em>¥59</em></li><li><span>双肩包</span><em>¥89</em></li><li><span>秋冬被</span><em>¥89</em></li><li><span>二寸证件照 8张</span><em>¥7</em></li><li><span>文件夹 / 资料袋</span><em>¥22</em></li><li><span>U盘</span><em>¥25</em></li><li><span>剃须刀（手动）</span><em>¥39</em></li><li><span>雨伞</span><em>¥59</em></li><li><span>电动牙刷</span><em>¥119</em></li><li><span>睡衣 ×2套</span><em>¥129</em></li></ul><div class="budtip">开始包含电动牙刷、手动剃须刀、双肩包、充电宝等提升体验的项。</div></div><div class="bud"><div class="budhead"><div><b>预算 ¥3000</b><span>共 78 件 · 合计约 ¥2969</span></div><button class="addb" type="button" data-ids="[10,13,12,15,16,18,28,29,36,34,31,32,65,49,59,20,67,0,3,79,88,51,38,24,39,63,87,14,70,89,68,42,37,60,78,35,46,30,33,66,69,84,17,4,61,57,40,21,80,53,62,74,81,41,52,56,72,45,58,90,43,86,27,92,44,82,55,23,54,77,50,73,47,83,75,76,48,85]">加入购物车</button></div><div class="budmore">展开完整清单 ▼</div><ul class="budlist"><li><span>记忆棉床垫（核心）</span><em>¥155</em></li><li><span>全棉四件套 32支</span><em>¥89</em></li><li><span>床笠 / 床垫保护套</span><em>¥26</em></li><li><span>记忆棉护颈枕</span><em>¥29</em></li><li><span>空调夏被</span><em>¥49</em></li><li><span>床帘（全遮光）</span><em>¥98</em></li><li><span>细软毛牙刷（家庭装）</span><em>¥22</em></li><li><span>牙膏</span><em>¥17</em></li><li><span>浴室拖鞋</span><em>¥11</em></li><li><span>毛巾 ×2</span><em>¥29</em></li><li><span>沐浴露</span><em>¥29</em></li><li><span>洗发水</span><em>¥38</em></li><li><span>插排 ×2</span><em>¥45</em></li><li><span>衣架 ×20</span><em>¥24</em></li><li><span>洗衣液</span><em>¥39</em></li><li><span>床边多层挂篮</span><em>¥14</em></li><li><span>夹子式护眼台灯</span><em>¥89</em></li><li><span>证件收纳包 多层分格</span><em>¥19</em></li><li><span>一寸证件照 8张 + 电子版</span><em>¥9</em></li><li><span>中性笔 + 笔芯</span><em>¥22</em></li><li><span>粘钩 ×10</span><em>¥11</em></li><li><span>晾衣夹 ×20</span><em>¥11</em></li><li><span>漱口杯</span><em>¥12</em></li><li><span>隔潮垫</span><em>¥12</em></li><li><span>香皂 + 皂盒</span><em>¥15</em></li><li><span>除湿袋 ×10</span><em>¥15</em></li><li><span>柜锁 ×2</span><em>¥15</em></li><li><span>枕套（备用一对）</span><em>¥17</em></li><li><span>多合一数据线</span><em>¥17</em></li><li><span>垃圾桶 + 垃圾袋</span><em>¥17</em></li><li><span>磁吸充电小夜灯</span><em>¥18</em></li><li><span>马桶刷 + 洁厕灵</span><em>¥18</em></li><li><span>折叠脸盆 ×2</span><em>¥22</em></li><li><span>衣物消毒液</span><em>¥22</em></li><li><span>笔记本 ×3</span><em>¥25</em></li><li><span>一次性洗脸巾</span><em>¥26</em></li><li><span>指甲刀套装</span><em>¥29</em></li><li><span>洗面奶（控油）</span><em>¥32</em></li><li><span>浴巾 ×2</span><em>¥55</em></li><li><span>多口USB充电器</span><em>¥89</em></li><li><span>充电宝</span><em>¥59</em></li><li><span>双肩包</span><em>¥89</em></li><li><span>秋冬被</span><em>¥89</em></li><li><span>二寸证件照 8张</span><em>¥7</em></li><li><span>洗衣袋</span><em>¥11</em></li><li><span>真空压缩袋 ×5</span><em>¥17</em></li><li><span>浴室收纳篮</span><em>¥17</em></li><li><span>床头置物架</span><em>¥19</em></li><li><span>文件夹 / 资料袋</span><em>¥22</em></li><li><span>脏衣篮</span><em>¥22</em></li><li><span>折叠洗衣盆</span><em>¥22</em></li><li><span>U盘</span><em>¥25</em></li><li><span>订书机</span><em>¥25</em></li><li><span>浴室防滑地垫</span><em>¥25</em></li><li><span>晾衣杆</span><em>¥25</em></li><li><span>鞋架</span><em>¥25</em></li><li><span>电脑支架</span><em>¥35</em></li><li><span>剃须刀（手动）</span><em>¥39</em></li><li><span>床下收纳箱</span><em>¥52</em></li><li><span>雨伞</span><em>¥59</em></li><li><span>吹风机</span><em>¥85</em></li><li><span>保温杯</span><em>¥109</em></li><li><span>电动牙刷</span><em>¥119</em></li><li><span>睡衣 ×2套</span><em>¥129</em></li><li><span>剃须刀（电动）</span><em>¥139</em></li><li><span>便利贴 + 标签纸</span><em>¥9</em></li><li><span>鞋刷</span><em>¥9</em></li><li><span>枕巾 2条</span><em>¥10</em></li><li><span>粘毛器</span><em>¥11</em></li><li><span>桌面理线器</span><em>¥11</em></li><li><span>裤架</span><em>¥17</em></li><li><span>手机支架</span><em>¥17</em></li><li><span>鼻毛剪（圆头）</span><em>¥18</em></li><li><span>尺规套装（工科）</span><em>¥25</em></li><li><span>USB小风扇</span><em>¥29</em></li><li><span>震动闹钟</span><em>¥29</em></li><li><span>皮带</span><em>¥59</em></li><li><span>保温壶</span><em>¥129</em></li></ul><div class="budtip">接近全清单，覆盖个护、收纳与品质小电，但不必一次买完。</div></div></div></div>
 <div class="sheet" id="sheet-sch" style="display:none"><div class="grab"></div><div class="shbar"><b>床铺搭配</b><button class="xbtn" aria-label="关闭"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div><div class="body"><div class="ptitle">宿舍床铺搭配方案<small>颜色统一就好看</small></div><div class="pdesc">床铺观感主要取决于<b>颜色是否统一</b>，而不是东西贵不贵。床品、床帘、收纳选同一色系，用完放回固定位置，就已经比大多数宿舍干净了。</div><div class="sch"><div class="schhead"><div class="schsw"><i style="background:#8e959c"></i><i style="background:#f2f3f5"></i><i style="background:#c9ced3"></i></div><div><b>方案 A · 极简白灰</b><p>最稳的一套，不容易出错，视觉干净，适合不想动脑的人。</p></div></div><ul class="schlist"><li><b>全棉四件套 32支</b><span>浅灰 / 中灰</span><em>¥89</em></li><li><b>床笠 / 床垫保护套</b><span>白色</span><em>¥26</em></li><li><b>记忆棉护颈枕</b><span>白色</span><em>¥29</em></li><li><b>空调夏被</b><span>浅灰</span><em>¥49</em></li><li><b>床帘（全遮光）</b><span>中灰</span><em>¥98</em></li><li><b>床边多层挂篮</b><span>黑色铁艺</span><em>¥14</em></li><li><b>夹子式护眼台灯</b><span>白色</span><em>¥89</em></li></ul><div class="schtot">共 7 件 · 合计约 ¥394</div></div><div class="sch"><div class="schhead"><div class="schsw"><i style="background:#efe6d8"></i><i style="background:#faf6ef"></i><i style="background:#d8c7ab"></i></div><div><b>方案 B · 奶油米色</b><p>温暖柔和，拍照最上镜，适合想要舒服氛围的人。</p></div></div><ul class="schlist"><li><b>全棉四件套 32支</b><span>米白 / 奶咖</span><em>¥89</em></li><li><b>床笠 / 床垫保护套</b><span>米白</span><em>¥26</em></li><li><b>记忆棉护颈枕</b><span>米白</span><em>¥29</em></li><li><b>空调夏被</b><span>奶白</span><em>¥49</em></li><li><b>床帘（全遮光）</b><span>米白 / 浅卡其</span><em>¥98</em></li><li><b>床边多层挂篮</b><span>白色</span><em>¥14</em></li><li><b>夹子式护眼台灯</b><span>暖白光</span><em>¥89</em></li></ul><div class="schtot">共 7 件 · 合计约 ¥394</div></div><div class="sch"><div class="schhead"><div class="schsw"><i style="background:#2c3034"></i><i style="background:#8a9096"></i><i style="background:#15181b"></i></div><div><b>方案 C · 黑灰高级</b><p>最显质感，耐脏，男生宿舍最常见的清爽高级感。</p></div></div><ul class="schlist"><li><b>全棉四件套 32支</b><span>碳灰 / 黑</span><em>¥89</em></li><li><b>床笠 / 床垫保护套</b><span>深灰</span><em>¥26</em></li><li><b>记忆棉护颈枕</b><span>深灰</span><em>¥29</em></li><li><b>空调夏被</b><span>中灰</span><em>¥49</em></li><li><b>床帘（全遮光）</b><span>深灰 / 黑</span><em>¥98</em></li><li><b>床边多层挂篮</b><span>黑色铁艺</span><em>¥14</em></li><li><b>夹子式护眼台灯</b><span>黑色</span><em>¥89</em></li></ul><div class="schtot">共 7 件 · 合计约 ¥394</div></div><div class="sch"><div class="schhead"><div class="schsw"><i style="background:#a8c0d0"></i><i style="background:#eef3f7"></i><i style="background:#7d9cb0"></i></div><div><b>方案 D · 浅蓝清爽</b><p>干净透气，夏天看着凉快，适合沿海湿热地区。</p></div></div><ul class="schlist"><li><b>全棉四件套 32支</b><span>雾霾蓝</span><em>¥89</em></li><li><b>床笠 / 床垫保护套</b><span>浅蓝白</span><em>¥26</em></li><li><b>记忆棉护颈枕</b><span>白色</span><em>¥29</em></li><li><b>空调夏被</b><span>浅蓝</span><em>¥49</em></li><li><b>床帘（全遮光）</b><span>雾霾蓝</span><em>¥98</em></li><li><b>床边多层挂篮</b><span>白色</span><em>¥14</em></li><li><b>夹子式护眼台灯</b><span>白色</span><em>¥89</em></li></ul><div class="schtot">共 7 件 · 合计约 ¥394</div></div><div class="sch"><div class="schhead"><div class="schsw"><i style="background:#9aa1a7"></i><i style="background:#f4f5f6"></i><i style="background:#d5d9dc"></i></div><div><b>方案 E · 低预算极简</b><p>只买必要件，颜色统一就能出效果，总花费最低。</p></div></div><ul class="schlist"><li><b>全棉四件套 32支</b><span>浅灰</span><em>¥89</em></li><li><b>床笠 / 床垫保护套</b><span>白色</span><em>¥26</em></li><li><b>记忆棉护颈枕</b><span>白色</span><em>¥29</em></li><li><b>空调夏被</b><span>浅灰</span><em>¥49</em></li><li><b>床帘（高度可调款）</b><span>中灰</span><em>¥79</em></li><li><b>床边多层挂篮</b><span>黑色铁艺</span><em>¥14</em></li><li><b>衣架 ×20</b><span>白色</span><em>¥24</em></li><li><b>除湿袋 ×10</b><span>白色</span><em>¥15</em></li></ul><div class="schtot">共 8 件 · 合计约 ¥325</div></div></div></div>
 <div class="sheet" id="sheet-deco" style="display:none"><div class="grab"></div><div class="shbar"><b>搭配灵感</b><button class="xbtn" aria-label="关闭"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div><div class="body"><div class="ptitle">宿舍布置灵感<small>抖音 / 小红书 ins 风共识搭配</small></div><div class="pdesc">四个区域逐个说怎么摆，最后一条是配色总原则。</div><div class="trap nd"><b><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#34c759;margin-right:8px;vertical-align:1px"></i>睡眠区</b><p>全遮光床帘打底 + 同色系纯色四件套（奶油白 / 燕麦色 / 雾霾蓝最出片）+ LED 暖光灯串沿床架走线，晚上一拉帘就是独立小窝。</p></div><div class="trap nd"><b><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#007aff;margin-right:8px;vertical-align:1px"></i>桌面区</b><p>亚克力置物架分三层摆书本文具，显示器增高架下面塞键盘，桌角放折叠小风扇，背后贴一面软木板 + 拍立得。</p></div><div class="trap nd"><b><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff9500;margin-right:8px;vertical-align:1px"></i>床头区</b><p>免打孔挂篮放手机、耳机、纸巾，靠垫一只，真丝眼罩挂在帘边，伸手就够得着。</p></div><div class="trap nd"><b><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#af52de;margin-right:8px;vertical-align:1px"></i>收纳区</b><p>床下统一 PP 翻盖箱（同一色系更整齐），真空压缩袋收换季衣物，衣柜内浸塑衣架全部同款。</p></div><div class="trap nd"><b><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff3b30;margin-right:8px;vertical-align:1px"></i>配色原则</b><p>整体不超过三种主色。高颜值的内核是「统一」，不是「多买」——这条比买什么都重要。</p></div></div></div>
 <div class="sheet" id="sheet-trap" style="display:none"><div class="grab"></div><div class="shbar"><b>避坑清单</b><button class="xbtn" aria-label="关闭"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div><div class="body">
@@ -909,7 +860,7 @@ function bind() {
     applyFilters(true);
     if (st.cat) {
       var sec = $$('.section').filter(function (s) { return s.dataset.cat === st.cat; })[0];
-      if (sec) setTimeout(function () { scrollTo({ top: sec.offsetTop - $('.navbar').offsetHeight - 4, behavior: 'smooth' }); }, 40);
+      if (sec) setTimeout(function () { scrollTo({ top: sec.offsetTop - $('.topdock').offsetHeight - 10, behavior: 'smooth' }); }, 40);
     } else scrollTo({ top: 0, behavior: 'smooth' });
   });
   // search
@@ -960,7 +911,7 @@ function bind() {
       bm.textContent = box.classList.contains('open') ? '收起清单 ▲' : '展开完整清单 ▼'; return; }
   });
   // 吸顶导航边缘线（滚动感知）
-  var nav = $('.navbar');
+  var nav = $('.topdock');
   addEventListener('scroll', function () {
     nav.classList.toggle('edge', scrollY > 4);
   }, { passive: true });
